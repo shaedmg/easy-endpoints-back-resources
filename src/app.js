@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const api = require('./api')
 
 
-const PORT = 4000;
+const PORT = 5000;
 const DB_URL = 'mongodb://localhost:27017/ee-resources'
 
 mongoose.connect(DB_URL)

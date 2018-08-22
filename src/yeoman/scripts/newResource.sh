@@ -2,7 +2,7 @@
 set timeout -1
 set var [lindex $argv 0]
 set fields [lindex $argv 1] 
-cd /Users/joframontesdeocanuez/yeotest
+cd /Users/joframontesdeocanuez/apii
 spawn yo rest:api
 expect {
     "*What's the API name?" { send -- "$var\r" }
