@@ -12,6 +12,7 @@ module.exports.test.path = '/newProject'
 
 module.exports.test1 = promisify(async (req, res) => {
     startAPI();
+    res.send(200);
 })
 module.exports.test1.verb = 'get'
 module.exports.test1.path = '/startAPI'

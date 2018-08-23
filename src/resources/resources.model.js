@@ -8,7 +8,8 @@ const RESOURCEschema = mongoose.Schema({
     params: [{
         name: String,
         types: String
-    }]
+    }],
+    url: String
 })
 
 const resources = mongoose.model('resource', RESOURCEschema);
