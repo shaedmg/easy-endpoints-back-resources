@@ -5,8 +5,8 @@ async function initProject() {
     await launchShellCommand(`mkdir -p /Users/joframontesdeocanuez/apii`)
     await launchShellCommand(`./src/yeoman/scripts/initProject.sh`)
     await launchShellCommand(`cd /Users/joframontesdeocanuez/apii && npm run docs && npm i express-static`)
-    await prepareForDoc()
-    
+    await prepareForDoc();
+    await startAPI();
 }
 
 async function startAPI() {

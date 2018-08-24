@@ -5,7 +5,8 @@ const { initProject, startAPI } = require('../../yeoman')
 
 module.exports.test = promisify(async (req, res) => {
     initProject();
-    res.send(200)
+    setTimeout(()=>res.send(200),10000)
+    //res.send(200)
 })
 module.exports.test.verb = 'get'
 module.exports.test.path = '/newProject'
