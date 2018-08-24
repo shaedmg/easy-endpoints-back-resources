@@ -1,7 +1,6 @@
 const resources = require('./resources.model');
 const { createNewResource, updateResourceModel } = require('../yeoman');
 
-
 function getAllResources(req, res) {
     resources.find()
         .then(response => {
@@ -41,7 +40,7 @@ function postResource(req, res) {
                             }
                         }, {});
                         const resource = req.body.name;
-                        createNewResource(resource, fields);
+                        createNewResource(resource, fields, req.body.params);
                         return res.send("Resource was created succesfully")
                     })
                     .catch(response => {

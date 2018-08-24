@@ -41,4 +41,68 @@ const server = http`)
     })
 }
 
-module.exports = { generateDoc , prepareForDoc}
+function prepareModel(file, resource) {
+    return new Promise ((resolve, reject) => {
+        const data = fs.readFileSync(file, 'utf8', function (err, data) {
+            if (err) {
+                return console.log(err);
+            }
+            return data;
+        });
+    
+        const datosPartidos = data.split(`${resource}Schema.methods`);
+        const datosParaEscribir = [];
+    
+        datosParaEscribir.push(datosPartidos[0]);
+        datosParaEscribir.push(`
+/* ### PARAMS ### */
+    
+/* ### PARAMS ### */
+        
+${resource}Schema.methods`)
+    
+        datosParaEscribir.push(datosPartidos[1])
+        fs.writeFileSync(file, datosParaEscribir.join(''), function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("El archivo fue creado correctamente");
+        });
+
+        resolve();
+
+    })
+}
+
+function modifyModel(file,resource,params) {
+    return new Promise ((resolve, reject) => {
+        const data = fs.readFileSync(file, 'utf8', function (err, data) {
+            if (err) {
+                return console.log(err);
+            }
+            
+            return data
+        });
+        
+        const datosPartidos = data.split(`/* ### PARAMS ### */`)
+        const datosPaEscribir = [];
+    
+        datosPaEscribir.push(datosPartidos[0]);
+        datosPaEscribir.push(`/* ### PARAMS ### */\n`)
+        params.forEach((item) => datosPaEscribir.push(`${resource}Schema.add(${item.model})\n`))
+        datosPaEscribir.push(`/* ### PARAMS ### */`)
+        datosPaEscribir.push(datosPartidos[2]);
+        
+        fs.writeFileSync(file, datosPaEscribir.join(''), function (err) {
+            if (err) {
+                return console.log(err);
+            }
+        
+            console.log("El archivo fue creado correctamente");
+        });
+
+        resolve()
+    })
+}
+
+module.exports = { generateDoc , prepareForDoc, prepareModel, modifyModel}

@@ -1,5 +1,7 @@
 const { launchShellCommand } = require('./scriptLauncher');
 const { generateDoc, prepareForDoc } = require('./../services/utils/')
+const { prepareModel, modifyModel} = require('../services/utils')
+
 
 async function initProject() {
     await launchShellCommand(`mkdir -p /Users/joframontesdeocanuez/apii`)
@@ -19,10 +21,16 @@ function restartAPI() {
     }) 
 }
 
-function createNewResource(resource, fields) {
-    launchShellCommand(`./src/yeoman/scripts/newResource.sh ${resource} ${fields}`).then(()=>{
-        generateDoc().then(res=> restartAPI());
-    }) 
+function createNewResource(resource, fields, params) {
+    return new Promise ((resolve, reject) => {
+        launchShellCommand(`./src/yeoman/scripts/newResource.sh ${resource} ${fields}`).then(()=>{
+            generateDoc().then(res=> {
+                prepareModel(`/Users/joframontesdeocanuez/apii/src/api/${resource}/model.js`, resource)
+                .then(() => modifyModel(`/Users/joframontesdeocanuez/apii/src/api/${resource}/model.js`, resource, params)
+                .then(()=> restartAPI()))
+            });
+        }) 
+    })
 }
 
 async function updateResourceModel(resource, fields) {
