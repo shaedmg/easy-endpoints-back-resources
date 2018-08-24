@@ -22,8 +22,11 @@ function restartAPI() {
 function createNewResource(resource, fields) {
     launchShellCommand(`./src/yeoman/scripts/newResource.sh ${resource} ${fields}`).then(()=>{
         generateDoc().then(res=> restartAPI());
-    })
-    
+    }) 
 }
 
-module.exports = { initProject, startAPI, restartAPI, createNewResource }
+async function updateResourceModel(resource, fields) {
+    await launchShellCommand(`./src/yeoman/scripts/updateResource.sh ${resource} ${fields}`)
+}
+
+module.exports = { initProject, startAPI, restartAPI, createNewResource, updateResourceModel }

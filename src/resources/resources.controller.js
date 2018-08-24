@@ -1,5 +1,5 @@
 const resources = require('./resources.model');
-const { createNewResource } = require('../yeoman');
+const { createNewResource, updateResourceModel } = require('../yeoman');
 
 
 function getAllResources(req, res) {
@@ -86,6 +86,7 @@ function updateResource(req, res) {
             if (req.body.params) {
                 doc.save()
                     .then(response => {
+                        updateResourceModel(doc.name, "test")
                         return res.json(response)
                     })
                     .catch(response => {
