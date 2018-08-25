@@ -14,7 +14,7 @@ const app = express();
 
 app.use(bodyParser.json())
 app.use(cors())
-app.use('/api', api)
+app.use('/api', checkLogged, api)
 
 module.exports = () => {
     return app.listen(PORT, () => console.log(`
