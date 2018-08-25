@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
+const checkLogged = require('./auth/authorization')
 const api = require('./api')
 
 
