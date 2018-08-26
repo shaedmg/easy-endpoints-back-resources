@@ -21,7 +21,7 @@ module.exports.test1.path = '/startAPI'
 
 module.exports.test2 = promisify(async (req, res) => {
     launchShellCommand('tar -zcvf api.tar.gz /Users/joframontesdeocanuez/apii 2> /dev/null')
-    .then((response) => res.sendFile('api.tar.gz', { root: __dirname+'/../../..' }))
+    .then((response) => res.download(__dirname+'/../../../api.tar.gz', 'api.tar.gz'))
 })
 module.exports.test2.verb = 'get'
 module.exports.test2.path = '/downloadAPI'
