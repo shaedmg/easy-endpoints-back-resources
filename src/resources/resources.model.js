@@ -14,6 +14,18 @@ const RESOURCEschema = mongoose.Schema({
         model: {
             type: String,
             required: true
+        },
+        type: {
+            type: String,
+            required: true
+        },
+        required : {
+            type: Boolean,
+            required: true
+        }, 
+        unique: {
+            type: Boolean,
+            required: true
         }
     }],
     url: String
