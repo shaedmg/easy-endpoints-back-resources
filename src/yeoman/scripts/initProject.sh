@@ -1,6 +1,7 @@
 #!/usr/bin/expect -f
 set timeout -1
-cd /Users/joframontesdeocanuez/apii
+set route [lindex $argv 0]
+cd $route
 spawn yo rest
 expect {
     "*What's the project name?" { send -- "\r" }
