@@ -1,6 +1,16 @@
 const resources = require('./resources.model');
-const { createNewResource, updateResourceModel } = require('../yeoman');
+const { createNewResource, updateResourceModel , restartAPI} = require('../yeoman');
 const { deleteResource } = require('./../services/utils')
+
+function getFieldsInCommas(params){
+    return params.reduce(function (palabraAnterior, palabraActual, index) {
+        if (index === 0) {
+            return palabraActual.name;
+        } else {
+            return palabraAnterior + "," + palabraActual.name;
+        }
+    }, {});
+}
 
 function getAllResources(req, res) {
     resources.find()
@@ -33,13 +43,7 @@ function postResource(req, res) {
 
                 newResource.save()
                     .then(response => {
-                        const fields = req.body.params.reduce(function (palabraAnterior, palabraActual, index) {
-                            if (index === 0) {
-                                return palabraActual.name;
-                            } else {
-                                return palabraAnterior + "," + palabraActual.name;
-                            }
-                        }, {});
+                        const fields = getFieldsInCommas(req.body.params)
                         const resource = req.body.name;
                         createNewResource(resource, fields, req.body.params);
                         return res.send("Resource was created succesfully")
@@ -86,8 +90,8 @@ function updateResource(req, res) {
             if (req.body.params) {
                 doc.save()
                     .then(response => {
-                        updateResourceModel(doc.name, "prueba", req.body.params)
-                        return res.json(response)
+                        const fields = getFieldsInCommas(req.body.params)
+                        updateResourceModel(doc.name, fields, req.body.params).then((response)=> res.json(response))
                     })
                     .catch(response => {
                         const objErrors = Object.keys(response.errors)
@@ -129,13 +133,12 @@ function removeResource(req, res) {
     resources.findOne({ name: req.params.name }, (err, doc) => {
         if (doc) {
             doc.remove();
-            deleteResource(name)
+            deleteResource(name).then(()=>restartAPI())
             return res.json(doc);
         } else {
             return res.status(400).send("There’s no resource with name=" + req.params.name);
         }
     })
 }
-
 
 module.exports = { getAllResources, getOneResource, postResource, updateResource, removeResource }

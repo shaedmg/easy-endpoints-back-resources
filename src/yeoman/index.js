@@ -1,6 +1,6 @@
 const { launchShellCommand } = require('./scriptLauncher');
 const { generateDoc, prepareForDoc } = require('./../services/utils/')
-const { prepareModel, modifyModel} = require('../services/utils')
+const { prepareModel, modifyModel, deleteResource} = require('../services/utils')
 
 
 async function initProject() {
@@ -36,15 +36,20 @@ function createNewResource(resource, fields, params) {
 
 function updateResourceModel(resource, fields, params) {
     return new Promise ((resolve, reject) => {
-        console.log("hola")
+        /*console.log("hola")
+        //launchShellCommand(`pwd`)
         launchShellCommand(`./src/yeoman/scripts/updateResource.sh ${resource} ${fields}`)
         .then(() => prepareModel(`/Users/joframontesdeocanuez/apii/src/api/${resource}/model.js`, resource)
             .then(()=> modifyModel(`/Users/joframontesdeocanuez/apii/src/api/${resource}/model.js`, resource, params)
                 .then(() => restartAPI())
             )
         )
-        resolve();
-    })
+        resolve();*/
+        deleteResource(resource).then(()=>createNewResource(resource, fields, params).
+        then(() => resolve()))
+        
+
+    });
 }
 
 module.exports = { initProject, startAPI, restartAPI, createNewResource, updateResourceModel }
