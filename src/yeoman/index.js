@@ -30,11 +30,21 @@ function createNewResource(resource, fields, params) {
                 .then(()=> restartAPI()))
             });
         }) 
+        resolve();
     })
 }
 
-async function updateResourceModel(resource, fields) {
-    await launchShellCommand(`./src/yeoman/scripts/updateResource.sh ${resource} ${fields}`)
+function updateResourceModel(resource, fields, params) {
+    return new Promise ((resolve, reject) => {
+        console.log("hola")
+        launchShellCommand(`./src/yeoman/scripts/updateResource.sh ${resource} ${fields}`)
+        .then(() => prepareModel(`/Users/joframontesdeocanuez/apii/src/api/${resource}/model.js`, resource)
+            .then(()=> modifyModel(`/Users/joframontesdeocanuez/apii/src/api/${resource}/model.js`, resource, params)
+                .then(() => restartAPI())
+            )
+        )
+        resolve();
+    })
 }
 
 module.exports = { initProject, startAPI, restartAPI, createNewResource, updateResourceModel }

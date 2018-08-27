@@ -100,9 +100,34 @@ function modifyModel(file,resource,params) {
         
             console.log("El archivo fue creado correctamente");
         });
-
+        console.log("prepare")
         resolve()
     })
 }
 
-module.exports = { generateDoc , prepareForDoc, prepareModel, modifyModel}
+function deleteResource(resource) {
+    return new Promise((resolve, reject) => {
+        launchShellCommand(`rm -Rf /Users/joframontesdeocanuez/apii/src/api/${resource}`)
+        const data = fs.readFileSync('/Users/joframontesdeocanuez/apii/src/api/index.js', 'utf8', function (err, data) {
+            if (err) {
+                return console.log(err);
+            }
+            return data
+        });
+        let datosPartidos = data.split(`import ${resource} from './${resource}'`)
+        let datosPaEscribir = datosPartidos.join('');
+        datosPartidos = datosPaEscribir.split(`router.use('/${resource}', ${resource})`)
+        datosPaEscribir = datosPartidos.join('');
+
+        fs.writeFileSync('/Users/joframontesdeocanuez/apii/src/api/index.js', datosPaEscribir, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+        
+            console.log("El archivo fue creado correctamente");
+        });
+        resolve();
+    })
+
+}
+module.exports = { generateDoc , prepareForDoc, prepareModel, modifyModel, deleteResource}

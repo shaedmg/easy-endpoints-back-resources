@@ -1,5 +1,6 @@
 const resources = require('./resources.model');
 const { createNewResource, updateResourceModel } = require('../yeoman');
+const { deleteResource } = require('./../services/utils')
 
 function getAllResources(req, res) {
     resources.find()
@@ -85,7 +86,7 @@ function updateResource(req, res) {
             if (req.body.params) {
                 doc.save()
                     .then(response => {
-                        updateResourceModel(doc.name, "test")
+                        updateResourceModel(doc.name, "prueba", req.body.params)
                         return res.json(response)
                     })
                     .catch(response => {
@@ -124,9 +125,11 @@ function updateResource(req, res) {
 }
 
 function removeResource(req, res) {
+    const name = req.params.name
     resources.findOne({ name: req.params.name }, (err, doc) => {
         if (doc) {
             doc.remove();
+            deleteResource(name)
             return res.json(doc);
         } else {
             return res.status(400).send("There’s no resource with name=" + req.params.name);
