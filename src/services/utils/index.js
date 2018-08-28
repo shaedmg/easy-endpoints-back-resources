@@ -26,7 +26,7 @@ function prepareForDoc() {
 process.title = "ClientAPIServer";
 const serve = require('express-static')
 app.get('/docs', (req,res)=>res.redirect('/docs/index.html'))
-app.use('/docs', serve(${ROUTE}/docs'))
+app.use('/docs', serve('${ROUTE}/docs'))
     
 const server = http`)
     
