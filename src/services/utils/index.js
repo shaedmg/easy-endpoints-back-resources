@@ -1,5 +1,76 @@
 const { launchShellCommand } = require('./../../yeoman/scriptLauncher');
 const fs = require('fs')
+
+function prepareMongo() {
+    return new Promise((resolve, reject) => {
+        const data = `
+/* eslint-disable no-unused-vars */
+import path from 'path'
+import merge from 'lodash/merge'
+
+/* istanbul ignore next */
+const requireProcessEnv = (name) => {
+  if (!process.env[name]) {
+    throw new Error('You must set the ' + name + ' environment variable')
+  }
+  return process.env[name]
+}
+
+/* istanbul ignore next */
+if (process.env.NODE_ENV !== 'production') {
+  const dotenv = require('dotenv-safe')
+  dotenv.load({
+    path: path.join(__dirname, '../.env'),
+    sample: path.join(__dirname, '../.env.example')
+  })
+}
+
+const config = {
+  all: {
+    env: process.env.NODE_ENV || 'development',
+    root: path.join(__dirname, '..'),
+    port: process.env.PORT || 9000,
+    ip: process.env.IP || '0.0.0.0',
+    apiRoot: process.env.API_ROOT || '',
+    masterKey: requireProcessEnv('MASTER_KEY'),
+    mongo: {
+      options: {
+        db: {
+          safe: true
+        }
+      }
+    }
+  },
+  test: { },
+  development: {
+    mongo: {
+      uri: 'mongodb://mongodb/apii-dev',
+      options: {
+        debug: true
+      }
+    }
+  },
+  production: {
+    ip: process.env.IP || undefined,
+    port: process.env.PORT || 8080,
+    mongo: {
+      uri: process.env.MONGODB_URI || 'mongodb://mongodb/apii'
+    }
+  }
+}
+
+module.exports = merge(config.all, config[config.all.env])
+export default module.exports`;
+        fs.writeFileSync(`${ROUTE}/src/config.js`, data, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("El archivo fue creado correctamente");
+        });
+        resolve();
+    })
+}
+
 async function generateDoc() {
     return new Promise((resolve, reject) => {
         launchShellCommand(`cd ${ROUTE} && npm run docs`)
@@ -130,4 +201,4 @@ function deleteResource(resource) {
     })
 
 }
-module.exports = { generateDoc , prepareForDoc, prepareModel, modifyModel, deleteResource}
+module.exports = { generateDoc , prepareForDoc, prepareModel, modifyModel, deleteResource, prepareMongo}

@@ -1,5 +1,5 @@
 const { launchShellCommand } = require('./scriptLauncher');
-const { generateDoc, prepareForDoc } = require('./../services/utils/')
+const { generateDoc, prepareForDoc, prepareMongo } = require('./../services/utils/')
 const { prepareModel, modifyModel, deleteResource} = require('../services/utils')
 
 
@@ -8,6 +8,7 @@ async function initProject() {
     await launchShellCommand(`./src/yeoman/scripts/initProject.sh ${ROUTE}`)
     await launchShellCommand(`cd ${ROUTE} && npm run docs && npm i express-static`)
     await prepareForDoc();
+    await prepareMongo();
     await startAPI();
 }
 
